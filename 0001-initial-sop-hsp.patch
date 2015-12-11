@@ -1,0 +1,114 @@
+From 7bb3f71de3277746e6d98df64ecec4c070a401dd Mon Sep 17 00:00:00 2001
+From: root <root@a1u17>
+Date: Mon, 10 Aug 2015 15:33:20 -0700
+Subject: [PATCH 1/2] initial-sop-hsp
+
+---
+ manila/share/drivers/hds/sop.py | 22 +++++++++++-----------
+ 1 file changed, 11 insertions(+), 11 deletions(-)
+
+diff --git a/manila/share/drivers/hds/sop.py b/manila/share/drivers/hds/sop.py
+index 39baa77..dd3c15c 100644
+--- a/manila/share/drivers/hds/sop.py
++++ b/manila/share/drivers/hds/sop.py
+@@ -94,7 +94,7 @@ class SopShareDriver(driver.ShareDriver):
+         """Add a new filesystem via SOPAPI."""
+         sopuri = '/file-systems/'
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         payload_json = json.dumps(payload)
+         resp_headers, resp_content = httpclient.request(uri, 'POST',
+                                                         body=payload_json,
+@@ -113,7 +113,7 @@ class SopShareDriver(driver.ShareDriver):
+         sopuri = '/shares/'
+         headers = dict(Authorization=self.get_sop_auth_header())
+         payload_json = json.dumps(payload)
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         resp_headers, resp_content = httpclient.request(uri, 'POST',
+                                                         body=payload_json,
+                                                         headers=headers)
+@@ -131,7 +131,7 @@ class SopShareDriver(driver.ShareDriver):
+ 
+         sopuri = '/file-systems/list?name=' + fsname
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         resp_headers, resp_content = httpclient.request(uri, 'GET',
+                                                         body='',
+                                                         headers=headers)
+@@ -153,7 +153,7 @@ class SopShareDriver(driver.ShareDriver):
+         """Look up share given the share name."""
+         sopuri = '/shares/list?name=' + share_name
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         resp_headers, resp_content = httpclient.request(uri, 'GET',
+                                                         body='',
+                                                         headers=headers)
+@@ -201,14 +201,14 @@ class SopShareDriver(driver.ShareDriver):
+             'file-system-id': self._get_file_system_id_by_name(
+                 httpclient, share['id']),
+         }
+-        return self.sop_target + ':/' + self._add_share_sopapi(
++        return self.sop_target.replace('https://', '') + ':/' + self._add_share_sopapi(
+             httpclient, payload)
+ 
+     def _delete_file_system_sopapi(self, httpclient, fs_id):
+         """Delete filesystem on SOP."""
+         sopuri = '/file-systems/' + fs_id
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         resp_headers, resp_content = httpclient.request(uri, 'DELETE',
+                                                         body='',
+                                                         headers=headers)
+@@ -224,7 +224,7 @@ class SopShareDriver(driver.ShareDriver):
+         """Delete share on SOP."""
+         sopuri = '/shares/' + share_id
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         resp_headers, resp_content = httpclient.request(uri, 'DELETE',
+                                                         body='',
+                                                         headers=headers)
+@@ -297,7 +297,7 @@ class SopShareDriver(driver.ShareDriver):
+         }
+         sopuri = '/shares/'
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri + sop_share_id
++        uri = self.sop_target + '/hspapi' + sopuri + sop_share_id
+         resp_headers, resp_content = httpclient.request(
+             uri, 'POST',
+             body=json.dumps(payload),
+@@ -329,7 +329,7 @@ class SopShareDriver(driver.ShareDriver):
+ 
+         sopuri = '/shares/' + sop_share_id
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi' + sopuri
++        uri = self.sop_target + '/hspapi' + sopuri
+         resp_headers, resp_content = httpclient.request(
+             uri, 'POST',
+             body=json.dumps(payload),
+@@ -350,7 +350,7 @@ class SopShareDriver(driver.ShareDriver):
+         to login.
+         """
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi/clusters'
++        uri = self.sop_target + '/hspapi/clusters'
+         try:
+             httpclient = httplib2.Http(disable_ssl_certificate_validation=True,
+                                        timeout=5)
+@@ -371,7 +371,7 @@ class SopShareDriver(driver.ShareDriver):
+     def _get_sop_filesystem_stats(self):
+         """Calculate cluster storage capacity and return in GiB."""
+         headers = dict(Authorization=self.get_sop_auth_header())
+-        uri = self.sop_target + '/sopapi/clusters'
++        uri = self.sop_target + '/hspapi/clusters'
+         httpclient = httplib2.Http(disable_ssl_certificate_validation=True,
+                                    timeout=None)
+         resp_headers, resp_content = httpclient.request(uri, 'GET',
+-- 
+1.9.1
+

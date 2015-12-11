@@ -1,0 +1,25 @@
+From e7d6ec9481c4782df462c26458366ab4b8739255 Mon Sep 17 00:00:00 2001
+From: root <root@a1u17>
+Date: Mon, 10 Aug 2015 15:33:52 -0700
+Subject: [PATCH 2/2] turn off all-aquash
+
+---
+ manila/share/drivers/hds/sop.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/manila/share/drivers/hds/sop.py b/manila/share/drivers/hds/sop.py
+index dd3c15c..7c14014 100644
+--- a/manila/share/drivers/hds/sop.py
++++ b/manila/share/drivers/hds/sop.py
+@@ -285,7 +285,7 @@ class SopShareDriver(driver.ShareDriver):
+                         access['access_level']))
+         payload = {
+             'action': 'add-access-rule',
+-            'all-squash': True,
++            'all-squash': False,
+             'anongid': 65534,
+             'anonuid': 65534,
+             'host-specification': access['access_to'],
+-- 
+1.9.1
+
